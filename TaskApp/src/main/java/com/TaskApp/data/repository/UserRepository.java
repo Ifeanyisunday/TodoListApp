@@ -1,5 +1,6 @@
 package com.TaskApp.data.repository;
 
+import com.TaskApp.data.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

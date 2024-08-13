@@ -1,5 +1,14 @@
 package com.TaskApp.service;
 
+import com.TaskApp.data.model.User;
+import com.TaskApp.data.repository.UserRepository;
+import com.TaskApp.dtos.requests.LogOutRequest;
+import com.TaskApp.dtos.requests.LoginRequest;
+import com.TaskApp.dtos.requests.RegisterRequest;
+import com.TaskApp.dtos.responses.LogOutResponse;
+import com.TaskApp.dtos.responses.LoginResponse;
+import com.TaskApp.dtos.responses.RegisterResponses;
+import com.TaskApp.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,5 +1,10 @@
 package com.TaskApp.service;
 
+import com.TaskApp.data.model.Task;
+import com.TaskApp.data.repository.TaskRepository;
+import com.TaskApp.data.repository.UserRepository;
+import com.TaskApp.dtos.requests.*;
+import com.TaskApp.exceptions.UserDetailsEmpty;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

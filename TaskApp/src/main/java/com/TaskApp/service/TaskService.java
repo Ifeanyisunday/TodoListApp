@@ -1,5 +1,13 @@
 package com.TaskApp.service;
 
+import com.TaskApp.data.model.Task;
+import com.TaskApp.dtos.requests.CompleteTaskRequest;
+import com.TaskApp.dtos.requests.FindAllRequest;
+import com.TaskApp.dtos.requests.TaskAddRequest;
+import com.TaskApp.dtos.responses.CompleteTaskResponse;
+import com.TaskApp.dtos.responses.DeleteResponse;
+import com.TaskApp.dtos.responses.TaskAddResponse;
+import com.TaskApp.dtos.responses.UpdateTaskResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

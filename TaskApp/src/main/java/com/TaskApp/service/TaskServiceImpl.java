@@ -1,5 +1,13 @@
 package com.TaskApp.service;
 
+import com.TaskApp.data.model.Task;
+import com.TaskApp.data.model.User;
+import com.TaskApp.data.repository.TaskRepository;
+import com.TaskApp.data.repository.UserRepository;
+import com.TaskApp.dtos.requests.CompleteTaskRequest;
+import com.TaskApp.dtos.requests.FindAllRequest;
+import com.TaskApp.dtos.requests.TaskAddRequest;
+import com.TaskApp.dtos.responses.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

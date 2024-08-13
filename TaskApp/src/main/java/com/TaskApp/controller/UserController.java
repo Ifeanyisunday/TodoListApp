@@ -1,6 +1,11 @@
 package com.TaskApp.controller;
 
 
+import com.TaskApp.dtos.requests.LogOutRequest;
+import com.TaskApp.dtos.requests.LoginRequest;
+import com.TaskApp.dtos.requests.RegisterRequest;
+import com.TaskApp.dtos.responses.ApiResponse;
+import com.TaskApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,4 +53,5 @@ import static org.springframework.http.HttpStatus.CREATED;
                         BAD_REQUEST);
             }
         }
+    }
 
