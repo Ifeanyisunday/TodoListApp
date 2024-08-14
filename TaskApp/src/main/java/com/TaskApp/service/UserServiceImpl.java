@@ -2,12 +2,8 @@ package com.TaskApp.service;
 
 import com.TaskApp.data.model.User;
 import com.TaskApp.data.repository.UserRepository;
-import com.TaskApp.dtos.requests.LogOutRequest;
-import com.TaskApp.dtos.requests.LoginRequest;
-import com.TaskApp.dtos.requests.RegisterRequest;
-import com.TaskApp.dtos.responses.LogOutResponse;
-import com.TaskApp.dtos.responses.LoginResponse;
-import com.TaskApp.dtos.responses.RegisterResponses;
+import com.TaskApp.dtos.requests.*;
+import com.TaskApp.dtos.responses.*;
 import com.TaskApp.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,18 +17,18 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public RegisterResponses registerUser(RegisterRequest registerRequest) {
+        userRegisterValidation(registerRequest);
         User user = new User();
-        user.setFirstName(registerRequest.getFirstName());
-        user.setLastName(registerRequest.getLastName());
+        user.setUserName(registerRequest.getUserName());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(registerRequest.getPassword());
-        userRegisterValidation(user);
         userRepository.save(user);
         RegisterResponses registerResponses = new RegisterResponses();
-        registerResponses.setFirstName(user.getFirstName());
-        registerResponses.setMessage("Registration successful");
+        registerResponses.setUserName(user.getUserName());
+        registerResponses.setMessage("your registration was successful");
         return registerResponses;
     }
+
 
     @Override
     public LoginResponse loginUser(LoginRequest loginRequest) {
@@ -40,13 +36,20 @@ public class UserServiceImpl implements UserService{
         Optional<User> userOptional = userRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
         if (userOptional.isPresent()){
             User user = userOptional.get();
-            user.setLoggedIn(true);
-            userRepository.save(user);
+            if(user.isLoggedIn() == false) {
+                user.setLoggedIn(true);
+                userRepository.save(user);
+                LoginResponse loginResponse = new LoginResponse();
+                loginResponse.setUserName(user.getUserName());
+                loginResponse.setMessage("you are logged in");
+                return loginResponse;
+            }else{
+                LoginResponse loginResponse = new LoginResponse();
+                loginResponse.setUserName(userOptional.get().getUserName());
+                loginResponse.setMessage("you are already logged in");
+            }
         }
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setFirstName(userOptional.get().getFirstName());
-        loginResponse.setMessage("you are logged in");
-        return loginResponse;
+        return null;
     }
 
     @Override
@@ -59,27 +62,55 @@ public class UserServiceImpl implements UserService{
             userRepository.save(user);
         }
         LogOutResponse logOutResponse = new LogOutResponse();
-        logOutResponse.setFirstName(userOptional.get().getFirstName());
+        logOutResponse.setUserName(userOptional.get().getUserName());
         logOutResponse.setMessage("you are logged out");
         return logOutResponse;
     }
 
+    public DeleteProfileResponse deleteUser(DeleteUserRequest deleteUserRequest){
+        Optional<User> userOptional = userRepository.findByUserName(deleteUserRequest.getUserName());
+        User user = userOptional.get();
+        if(userOptional.isPresent()){
+            if(userOptional.get().isLoggedIn() == true) {
+                userRepository.delete(user);
+                DeleteProfileResponse deleteProfileResponse = new DeleteProfileResponse();
+                deleteProfileResponse.setMessage("Profile deleted");
+                return deleteProfileResponse;
+            }
+        }
+        return null;
+    }
+
+//    public UpdateTaskResponse updateUserProfile(UpdateUserRequest updateUserRequest, RegisterRequest registerRequest){
+//        Optional<User> userOptional = userRepository.findByUserName(updateUserRequest.getUserName());
+//        if(userOptional.isPresent()){
+//            if(userOptional.get().isLoggedIn() == true) {
+//                User user = userOptional.get();
+//                user.setUserName(registerRequest.getUserName());
+//                user.setEmail(registerRequest.getEmail());
+//                user.setPassword(registerRequest.getPassword());
+//                userRepository.save(user);
+//                UpdateTaskResponse updateTaskResponse = new UpdateTaskResponse();
+//                updateTaskResponse.setMessage("User profile updated");
+//                return updateTaskResponse;
+//            }
+//        }
+//        return null;
+//    }
 
 
-
-    private void userRegisterValidation(User user){
-        if(user.getFirstName().isEmpty() || user.getLastName().isEmpty() || user.getEmail().isEmpty() || user.getPassword().isEmpty()){
+    private void userRegisterValidation(RegisterRequest registerRequest){
+        if(registerRequest.getUserName().isEmpty() || registerRequest.getEmail().isEmpty() || registerRequest.getPassword().isEmpty()){
             throw new UserDetailsEmpty("one field is empty");
         }
 
-        if(user.getFirstName().equals(" ") || user.getLastName().equals(" ") || user.getEmail().equals(" ") || user.getPassword().equals(" ")) {
+        if(registerRequest.getUserName().equals(" ") || registerRequest.getEmail().equals(" ") || registerRequest.getPassword().equals(" ")) {
             throw new EmptySpaceException("Can not take white spaces");
         }
 
-        Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
-
+        Optional<User> userOptional = userRepository.findByEmailAndPassword(registerRequest.getEmail(), registerRequest.getPassword());
         if (userOptional.isPresent()){
-            throw new UserIsPresentException("User already exist");
+            throw new UserIsPresentException("user already exist");
         }
     }
 

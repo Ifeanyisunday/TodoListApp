@@ -32,8 +32,7 @@ class TodoAppServiceImplTest {
     void testThatUserCanRegister(){
         userRepository.deleteAll();
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setFirstName("ify");
-        registerRequest.setLastName("sunday");
+        registerRequest.setUserName("sunday");
         registerRequest.setEmail("sunjnr10@gmail");
         registerRequest.setPassword("");
         assertThrows(UserDetailsEmpty.class, ()-> userService.registerUser(registerRequest));
@@ -44,34 +43,24 @@ class TodoAppServiceImplTest {
     void testUserCanLogin(){
         userRepository.deleteAll();
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setFirstName("ify");
-        registerRequest.setLastName("sunday");
+        registerRequest.setUserName("ify");
         registerRequest.setEmail("sunjnr10@gmail");
         registerRequest.setPassword("1234");
         userService.registerUser(registerRequest);
-        assertEquals(false, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("sunjnr10@gmail");
-        loginRequest.setPassword("1234");
-        userService.loginUser(loginRequest);
-        assertEquals(true, userRepository.findByEmail(loginRequest.getEmail()).get().isLoggedIn());
+        assertEquals(true, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
     }
+
 
     @Test
     void testUserCanLogOut(){
         userRepository.deleteAll();
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setFirstName("ify");
-        registerRequest.setLastName("sunday");
+        registerRequest.setUserName("sunday");
         registerRequest.setEmail("sunjnr10@gmail");
         registerRequest.setPassword("1234");
         userService.registerUser(registerRequest);
-        assertEquals(false, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("sunjnr10@gmail");
-        loginRequest.setPassword("1234");
-        userService.loginUser(loginRequest);
-        assertEquals(true, userRepository.findByEmail(loginRequest.getEmail()).get().isLoggedIn());
+        assertEquals(true, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
+
         LogOutRequest logOutRequest = new LogOutRequest();
         logOutRequest.setEmail("sunjnr10@gmail");
         logOutRequest.setPassword("1234");
@@ -84,35 +73,20 @@ class TodoAppServiceImplTest {
     void testUserCanAddTask(){
         userRepository.deleteAll();
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setFirstName("ify");
-        registerRequest.setLastName("sunday");
+        registerRequest.setUserName("ify");
         registerRequest.setEmail("sunjnr10@gmail");
         registerRequest.setPassword("1234");
         userService.registerUser(registerRequest);
-        assertEquals(false, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
+        assertEquals(true, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
         assertEquals(1, userRepository.count());
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("sunjnr10@gmail");
-        loginRequest.setPassword("1234");
-        userService.loginUser(loginRequest);
-        assertEquals(true, userRepository.findByEmail(loginRequest.getEmail()).get().isLoggedIn());
-
 
         RegisterRequest registerRequest2 = new RegisterRequest();
-        registerRequest2.setFirstName("kent");
-        registerRequest2.setLastName("sun");
+        registerRequest2.setUserName("kent");
         registerRequest2.setEmail("sunjnr11@gmail");
         registerRequest2.setPassword("1111");
         userService.registerUser(registerRequest2);
-        assertEquals(false, userRepository.findByEmail(registerRequest2.getEmail()).get().isLoggedIn());
+        assertEquals(true, userRepository.findByEmail(registerRequest2.getEmail()).get().isLoggedIn());
         assertEquals(2, userRepository.count());
-
-        LoginRequest loginRequest2 = new LoginRequest();
-        loginRequest2.setEmail("sunjnr11@gmail");
-        loginRequest2.setPassword("1111");
-        userService.loginUser(loginRequest2);
-        assertEquals(true, userRepository.findByEmail(loginRequest2.getEmail()).get().isLoggedIn());
-
 
         taskRepository.deleteAll();
         TaskAddRequest taskAddRequest1 = new TaskAddRequest();
@@ -139,35 +113,20 @@ class TodoAppServiceImplTest {
     void testDisplayAllTask(){
         userRepository.deleteAll();
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setFirstName("ify");
-        registerRequest.setLastName("sunday");
+        registerRequest.setUserName("sunday");
         registerRequest.setEmail("sunjnr10@gmail");
         registerRequest.setPassword("1234");
         userService.registerUser(registerRequest);
-        assertEquals(false, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
+        assertEquals(true, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
         assertEquals(1, userRepository.count());
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("sunjnr10@gmail");
-        loginRequest.setPassword("1234");
-        userService.loginUser(loginRequest);
-        assertEquals(true, userRepository.findByEmail(loginRequest.getEmail()).get().isLoggedIn());
-
 
         RegisterRequest registerRequest2 = new RegisterRequest();
-        registerRequest2.setFirstName("kent");
-        registerRequest2.setLastName("sun");
+        registerRequest2.setUserName("sun");
         registerRequest2.setEmail("sunjnr11@gmail");
         registerRequest2.setPassword("1111");
         userService.registerUser(registerRequest2);
-        assertEquals(false, userRepository.findByEmail(registerRequest2.getEmail()).get().isLoggedIn());
+        assertEquals(true, userRepository.findByEmail(registerRequest2.getEmail()).get().isLoggedIn());
         assertEquals(2, userRepository.count());
-
-        LoginRequest loginRequest2 = new LoginRequest();
-        loginRequest2.setEmail("sunjnr11@gmail");
-        loginRequest2.setPassword("1111");
-        userService.loginUser(loginRequest2);
-        assertEquals(true, userRepository.findByEmail(loginRequest2.getEmail()).get().isLoggedIn());
-
 
         taskRepository.deleteAll();
         TaskAddRequest taskAddRequest1 = new TaskAddRequest();
@@ -177,7 +136,6 @@ class TodoAppServiceImplTest {
         taskAddRequest1.setEmail("sunjnr10@gmail");
         taskService.addTask(taskAddRequest1);
         assertEquals(1, taskRepository.count());
-
 
         TaskAddRequest taskAddRequest2 = new TaskAddRequest();
         taskAddRequest2.setTitle("Python");
@@ -198,18 +156,12 @@ class TodoAppServiceImplTest {
     void testCompleteTask(){
         userRepository.deleteAll();
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setFirstName("ify");
-        registerRequest.setLastName("sunday");
+        registerRequest.setUserName("ify");
         registerRequest.setEmail("sunjnr10@gmail");
         registerRequest.setPassword("1234");
         userService.registerUser(registerRequest);
-        assertEquals(false, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
+        assertEquals(true, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
         assertEquals(1, userRepository.count());
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("sunjnr10@gmail");
-        loginRequest.setPassword("1234");
-        userService.loginUser(loginRequest);
-        assertEquals(true, userRepository.findByEmail(loginRequest.getEmail()).get().isLoggedIn());
 
         taskRepository.deleteAll();
         TaskAddRequest taskAddRequest1 = new TaskAddRequest();
@@ -234,33 +186,20 @@ class TodoAppServiceImplTest {
     void testThatUserCanCheckTaskProgress(){
         userRepository.deleteAll();
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setFirstName("ify");
-        registerRequest.setLastName("sunday");
+        registerRequest.setUserName("sunday");
         registerRequest.setEmail("sunjnr10@gmail");
         registerRequest.setPassword("1234");
         userService.registerUser(registerRequest);
-        assertEquals(false, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
+        assertEquals(true, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
         assertEquals(1, userRepository.count());
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("sunjnr10@gmail");
-        loginRequest.setPassword("1234");
-        userService.loginUser(loginRequest);
-        assertEquals(true, userRepository.findByEmail(loginRequest.getEmail()).get().isLoggedIn());
 
         RegisterRequest registerRequest2 = new RegisterRequest();
-        registerRequest2.setFirstName("kent");
-        registerRequest2.setLastName("sun");
+        registerRequest2.setUserName("kent");
         registerRequest2.setEmail("sunjnr11@gmail");
         registerRequest2.setPassword("1111");
         userService.registerUser(registerRequest2);
-        assertEquals(false, userRepository.findByEmail(registerRequest2.getEmail()).get().isLoggedIn());
+        assertEquals(true, userRepository.findByEmail(registerRequest2.getEmail()).get().isLoggedIn());
         assertEquals(2, userRepository.count());
-
-        LoginRequest loginRequest2 = new LoginRequest();
-        loginRequest2.setEmail("sunjnr11@gmail");
-        loginRequest2.setPassword("1111");
-        userService.loginUser(loginRequest2);
-        assertEquals(true, userRepository.findByEmail(loginRequest2.getEmail()).get().isLoggedIn());
 
         taskRepository.deleteAll();
         TaskAddRequest taskAddRequest1 = new TaskAddRequest();
@@ -290,18 +229,12 @@ class TodoAppServiceImplTest {
     void testUpdateTask(){
         userRepository.deleteAll();
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setFirstName("ify");
-        registerRequest.setLastName("sunday");
+        registerRequest.setUserName("ify");
         registerRequest.setEmail("sunjnr10@gmail");
         registerRequest.setPassword("1234");
         userService.registerUser(registerRequest);
-        assertEquals(false, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
+        assertEquals(true, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
         assertEquals(1, userRepository.count());
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("sunjnr10@gmail");
-        loginRequest.setPassword("1234");
-        userService.loginUser(loginRequest);
-        assertEquals(true, userRepository.findByEmail(loginRequest.getEmail()).get().isLoggedIn());
 
         taskRepository.deleteAll();
         TaskAddRequest taskAddRequest1 = new TaskAddRequest();
@@ -333,21 +266,15 @@ class TodoAppServiceImplTest {
     }
 
     @Test
-    void testDeleteTask(){
+    void testThatUserCanDeleteTask(){
         userRepository.deleteAll();
         RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setFirstName("ify");
-        registerRequest.setLastName("sunday");
+        registerRequest.setUserName("sunday");
         registerRequest.setEmail("sunjnr10@gmail");
         registerRequest.setPassword("1234");
         userService.registerUser(registerRequest);
-        assertEquals(false, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
+        assertEquals(true, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
         assertEquals(1, userRepository.count());
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmail("sunjnr10@gmail");
-        loginRequest.setPassword("1234");
-        userService.loginUser(loginRequest);
-        assertEquals(true, userRepository.findByEmail(loginRequest.getEmail()).get().isLoggedIn());
 
         taskRepository.deleteAll();
         TaskAddRequest taskAddRequest1 = new TaskAddRequest();
@@ -372,6 +299,45 @@ class TodoAppServiceImplTest {
         taskService.deleteTask(completeTaskRequest);
         assertEquals(1, taskRepository.count());
     }
+
+    @Test
+    void testThatUserCanDeleteUserProfile(){
+        userRepository.deleteAll();
+        RegisterRequest registerRequest = new RegisterRequest();
+        registerRequest.setUserName("sunday");
+        registerRequest.setEmail("sunjnr10@gmail");
+        registerRequest.setPassword("1234");
+        userService.registerUser(registerRequest);
+        assertEquals(true, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
+        assertEquals(1, userRepository.count());
+
+        DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
+        deleteUserRequest.setUserName("sunday");
+        userService.deleteUser(deleteUserRequest);
+        assertEquals(0, userRepository.count());
+    }
+
+//    @Test
+//    void testThatUserCanUpdateProfile(){
+//        userRepository.deleteAll();
+//        RegisterRequest registerRequest = new RegisterRequest();
+//        registerRequest.setUserName("sunday");
+//        registerRequest.setEmail("sunjnr10@gmail");
+//        registerRequest.setPassword("1234");
+//        userService.registerUser(registerRequest);
+//        assertEquals(true, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
+//        assertEquals(1, userRepository.count());
+//        assertEquals(1, userRepository.findAll().toString());
+//
+//        UpdateUserRequest updateUserRequest = new UpdateUserRequest();
+//        updateUserRequest.setUserName("sunday");
+//        RegisterRequest registerRequest1 = new RegisterRequest();
+//        registerRequest1.setUserName("kent");
+//        registerRequest1.setEmail("kent10");
+//        registerRequest1.setPassword("3333");
+//        userService.updateUserProfile(updateUserRequest, registerRequest1);
+//        assertEquals(1, userRepository.findAll().toString());
+//    }
 
 
 }

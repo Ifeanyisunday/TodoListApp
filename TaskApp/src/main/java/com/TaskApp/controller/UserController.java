@@ -1,9 +1,7 @@
 package com.TaskApp.controller;
 
 
-import com.TaskApp.dtos.requests.LogOutRequest;
-import com.TaskApp.dtos.requests.LoginRequest;
-import com.TaskApp.dtos.requests.RegisterRequest;
+import com.TaskApp.dtos.requests.*;
 import com.TaskApp.dtos.responses.ApiResponse;
 import com.TaskApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,44 +12,63 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 
     @RestController
-    @RequestMapping("api/v1/user")
+    @RequestMapping("api/v1/users")
     public class UserController {
 
         @Autowired
         private UserService userService;
 
 
-        @PostMapping("/register")
+        @PostMapping("/user")
         public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
             try {
                 var result = userService.registerUser(registerRequest);
                 return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
             } catch (Exception e) {
-                return new ResponseEntity<>(new ApiResponse(false, e.getMessage()),
-                        BAD_REQUEST);
+                return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
             }
         }
 
-        @PatchMapping("/login")
+        @PatchMapping("/loginUser")
         public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
             try {
                 var result = userService.loginUser(loginRequest);
                 return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
             } catch (Exception e) {
-                return new ResponseEntity<>(new ApiResponse(false, e.getMessage()),
-                        BAD_REQUEST);
+                return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
             }
         }
 
-        @PatchMapping("/logout")
+        @PatchMapping("/logoutUser")
         public ResponseEntity<?> logOut(@RequestBody LogOutRequest logOutRequest) {
             try {
                 var result = userService.logOutUser(logOutRequest);
                 return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
             } catch (Exception e) {
-                return new ResponseEntity<>(new ApiResponse(false, e.getMessage()),
-                        BAD_REQUEST);
+                return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
             }
         }
+
+        @DeleteMapping("/deleteUser")
+        public ResponseEntity<?> deleteUser(@RequestBody DeleteUserRequest deleteUserRequest){
+            try {
+                var result = userService.deleteUser(deleteUserRequest);
+                return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
+            }catch (Exception e){
+                return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+            }
+        }
+
+//        @PatchMapping("/updateUser")
+//        public ResponseEntity<?> updateUser(@RequestBody UpdateUserRequest updateUserRequest, @RequestBody RegisterRequest registerRequest){
+//            try {
+//                var result = userService.updateUserProfile(updateUserRequest, registerRequest);
+//                return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
+//            }catch (Exception e) {
+//                return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+//            }
+//        }
+
+
     }
 

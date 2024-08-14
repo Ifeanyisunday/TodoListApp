@@ -3,9 +3,6 @@ package com.TaskApp.dtos.requests;
 import lombok.Data;
 
 @Data
-public class RegisterRequest {
-
+public class UpdateUserRequest {
     private String userName;
-    private String email;
-    private String password;
 }

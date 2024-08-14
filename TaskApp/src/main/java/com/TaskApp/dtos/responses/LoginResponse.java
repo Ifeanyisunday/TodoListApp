@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class LoginResponse {
-    private String firstName;
+    private String userName;
     private String message;
 }
