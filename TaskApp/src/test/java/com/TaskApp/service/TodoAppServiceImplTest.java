@@ -82,7 +82,7 @@ class TodoAppServiceImplTest {
 
         RegisterRequest registerRequest2 = new RegisterRequest();
         registerRequest2.setUserName("kent");
-        registerRequest2.setEmail("sunjnr11@gmail");
+        registerRequest2.setEmail("kent10");
         registerRequest2.setPassword("1111");
         userService.registerUser(registerRequest2);
         assertEquals(true, userRepository.findByEmail(registerRequest2.getEmail()).get().isLoggedIn());
@@ -103,7 +103,7 @@ class TodoAppServiceImplTest {
         taskAddRequest2.setNote("Python your father there, your no fit wound me");
         taskAddRequest2.setPriority(3);
         taskAddRequest2.setEmail("sunjnr10@gmail");
-        taskService.addTask(taskAddRequest1);
+        taskService.addTask(taskAddRequest2);
         assertEquals(2, taskRepository.count());
 
     }

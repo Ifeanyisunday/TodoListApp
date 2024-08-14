@@ -24,8 +24,8 @@ public class UserServiceImpl implements UserService{
         user.setPassword(registerRequest.getPassword());
         userRepository.save(user);
         RegisterResponses registerResponses = new RegisterResponses();
-        registerResponses.setUserName(user.getUserName());
-        registerResponses.setMessage("your registration was successful");
+        String name = user.getUserName();
+        registerResponses.setMessage(name + " your registration was successful");
         return registerResponses;
     }
 
@@ -40,13 +40,14 @@ public class UserServiceImpl implements UserService{
                 user.setLoggedIn(true);
                 userRepository.save(user);
                 LoginResponse loginResponse = new LoginResponse();
-                loginResponse.setUserName(user.getUserName());
-                loginResponse.setMessage("you are logged in");
+                String name = user.getUserName();
+                loginResponse.setMessage(name + " you are logged in");
                 return loginResponse;
             }else{
                 LoginResponse loginResponse = new LoginResponse();
-                loginResponse.setUserName(userOptional.get().getUserName());
-                loginResponse.setMessage("you are already logged in");
+                String name = userOptional.get().getUserName());
+                loginResponse.setMessage(name + " you are already logged in");
+                return loginResponse;
             }
         }
         return null;
@@ -56,25 +57,40 @@ public class UserServiceImpl implements UserService{
     public LogOutResponse logOutUser(LogOutRequest logOutRequest) {
         userLogOutValidation(logOutRequest);
         Optional<User> userOptional = userRepository.findByEmailAndPassword(logOutRequest.getEmail(), logOutRequest.getPassword());
-        if (userOptional.isPresent()){
-            User user = userOptional.get();
-            user.setLoggedIn(false);
-            userRepository.save(user);
+        User user;
+        if (userOptional.isPresent()) {
+            if(userOptional.get().isLoggedIn() == true) {
+                userOptional.get().setLoggedIn(false);
+                user = userOptional.get();
+                userRepository.save(user);
+                LogOutResponse logOutResponse = new LogOutResponse();
+                String name = user.getUserName();
+                logOutResponse.setMessage(name + " you are logged out");
+                return logOutResponse;
+            }else{
+                user = userOptional.get();
+                LogOutResponse logOutResponse = new LogOutResponse();
+                String name = user.getUserName();
+                logOutResponse.setMessage(name + " you are offline");
+                return logOutResponse;
+            }
         }
-        LogOutResponse logOutResponse = new LogOutResponse();
-        logOutResponse.setUserName(userOptional.get().getUserName());
-        logOutResponse.setMessage("you are logged out");
-        return logOutResponse;
+        return null;
     }
 
     public DeleteProfileResponse deleteUser(DeleteUserRequest deleteUserRequest){
         Optional<User> userOptional = userRepository.findByUserName(deleteUserRequest.getUserName());
-        User user = userOptional.get();
+        User user;
         if(userOptional.isPresent()){
             if(userOptional.get().isLoggedIn() == true) {
+                user = userOptional.get();
                 userRepository.delete(user);
                 DeleteProfileResponse deleteProfileResponse = new DeleteProfileResponse();
                 deleteProfileResponse.setMessage("Profile deleted");
+                return deleteProfileResponse;
+            }else{
+                DeleteProfileResponse deleteProfileResponse = new DeleteProfileResponse();
+                deleteProfileResponse.setMessage("you are offline, login to delete");
                 return deleteProfileResponse;
             }
         }

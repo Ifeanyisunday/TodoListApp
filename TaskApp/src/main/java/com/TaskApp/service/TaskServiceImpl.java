@@ -6,8 +6,11 @@ import com.TaskApp.data.repository.TaskRepository;
 import com.TaskApp.data.repository.UserRepository;
 import com.TaskApp.dtos.requests.CompleteTaskRequest;
 import com.TaskApp.dtos.requests.FindAllRequest;
+import com.TaskApp.dtos.requests.LoginRequest;
 import com.TaskApp.dtos.requests.TaskAddRequest;
 import com.TaskApp.dtos.responses.*;
+import com.TaskApp.exceptions.EmptySpaceLoginExeption;
+import com.TaskApp.exceptions.UserLoginException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +27,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskAddResponse addTask(TaskAddRequest taskAddRequest) {
+        addTaskValidation(taskAddRequest);
         Optional<User> userOptional = userRepository.findByEmail(taskAddRequest.getEmail());
-        TaskAddResponse taskAddResponse = new TaskAddResponse();
         if (userOptional.isPresent()) {
+            Optional<Task> taskOptional = taskRepository.findByTitle(taskAddRequest.getTitle());
             User user = userOptional.get();
-            if (user.isLoggedIn()) {
+            TaskAddResponse taskAddResponse = new TaskAddResponse();
+            if (!taskOptional.isPresent() && userOptional.get().isLoggedIn() == true) {
                 Task task = new Task();
                 task.setUserId(user.getEmail());
                 task.setTitle(taskAddRequest.getTitle());
@@ -36,6 +41,9 @@ public class TaskServiceImpl implements TaskService {
                 task.setPriority(taskAddRequest.getPriority());
                 taskRepository.save(task);
                 taskAddResponse.setMessage("Task added");
+                return taskAddResponse;
+            }else {
+                taskAddResponse.setMessage("either you are offline or task is present");
                 return taskAddResponse;
             }
         }
@@ -82,7 +90,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
         float percentage = 0;
-        if (countTask >= 0) {
+        if (countTask >= 0 && countTask < 100) {
             percentage += Math.round((countTask / (float) apiFindAll(completeTaskRequest).size()) * 100);
             DailyCompleteResponse dailyCompleteResponse = new DailyCompleteResponse();
             dailyCompleteResponse.setMessage("Scheduled Tasks not complete");
@@ -125,7 +133,7 @@ public class TaskServiceImpl implements TaskService {
             if (task.getTitle().equals(completeTaskRequest.getTitle())) {
                 taskRepository.delete(task);
                 String taskName = completeTaskRequest.getTitle();
-                deleteResponse.setMessage(taskName + "Task deleted");
+                deleteResponse.setMessage(taskName + " Task deleted");
                 return deleteResponse;
             }
         }
@@ -140,5 +148,15 @@ public class TaskServiceImpl implements TaskService {
             return taskRepository.findAllByUserId(user.getEmail());
         }
         return null;
+    }
+
+    private void addTaskValidation(TaskAddRequest taskAddRequest) {
+        if(taskAddRequest.getEmail().isEmpty() || taskAddRequest.getNote().isEmpty() || taskAddRequest.getTitle().isEmpty()){
+            throw new UserLoginException("one field is empty");
+        }
+
+        if(taskAddRequest.getEmail().equals(" ") || taskAddRequest.getNote().equals(" ") || taskAddRequest.getTitle().equals(" ")){
+            throw new EmptySpaceLoginExeption("Can not take white spaces");
+        }
     }
 }
