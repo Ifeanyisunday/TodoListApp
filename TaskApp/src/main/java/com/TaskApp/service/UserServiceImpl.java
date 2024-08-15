@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService{
                 return loginResponse;
             }else{
                 LoginResponse loginResponse = new LoginResponse();
-                String name = userOptional.get().getUserName();
+                String name = user.getUserName();
                 loginResponse.setMessage(name + " you are already logged in");
                 return loginResponse;
             }
