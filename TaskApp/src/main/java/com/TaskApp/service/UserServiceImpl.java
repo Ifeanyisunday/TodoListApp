@@ -18,15 +18,20 @@ public class UserServiceImpl implements UserService{
     @Override
     public RegisterResponses registerUser(RegisterRequest registerRequest) {
         userRegisterValidation(registerRequest);
-        User user = new User();
-        user.setUserName(registerRequest.getUserName());
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(registerRequest.getPassword());
-        userRepository.save(user);
-        RegisterResponses registerResponses = new RegisterResponses();
-        String name = user.getUserName();
-        registerResponses.setMessage(name + " your registration was successful");
-        return registerResponses;
+        Optional<User> userOptional = userRepository.findByEmailAndPassword(registerRequest.getEmail(), registerRequest.getPassword());
+        if (userOptional.isPresent()){
+            throw new UserIsPresentException("user already exist");
+        }else{
+            User user = userOptional.get();
+            user.setUserName(registerRequest.getUserName());
+            user.setEmail(registerRequest.getEmail());
+            user.setPassword(registerRequest.getPassword());
+            userRepository.save(user);
+            RegisterResponses registerResponses = new RegisterResponses();
+            String name = user.getUserName();
+            registerResponses.setMessage(name + " your registration was successful");
+            return registerResponses;
+        }
     }
 
 

@@ -13,6 +13,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
     @RestController
     @RequestMapping("api/v1/users")
+    @CrossOrigin
     public class UserController {
 
         @Autowired
