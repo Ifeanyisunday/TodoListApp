@@ -18,20 +18,15 @@ public class UserServiceImpl implements UserService{
     @Override
     public RegisterResponses registerUser(RegisterRequest registerRequest) {
         userRegisterValidation(registerRequest);
-        Optional<User> userOptional = userRepository.findByEmailAndPassword(registerRequest.getEmail(), registerRequest.getPassword());
-        if (userOptional.isPresent()){
-            throw new UserIsPresentException("user already exist");
-        }else{
-            User user = userOptional.get();
-            user.setUserName(registerRequest.getUserName());
-            user.setEmail(registerRequest.getEmail());
-            user.setPassword(registerRequest.getPassword());
-            userRepository.save(user);
-            RegisterResponses registerResponses = new RegisterResponses();
-            String name = user.getUserName();
-            registerResponses.setMessage(name + " your registration was successful");
-            return registerResponses;
-        }
+        User user = new User();
+        user.setUserName(registerRequest.getUserName());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(registerRequest.getPassword());
+        userRepository.save(user);
+        RegisterResponses registerResponses = new RegisterResponses();
+        String name = user.getUserName();
+        registerResponses.setMessage(name + " your registration was successful");
+        return registerResponses;
     }
 
 
@@ -61,7 +56,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public LogOutResponse logOutUser(LogOutRequest logOutRequest) {
         userLogOutValidation(logOutRequest);
-        Optional<User> userOptional = userRepository.findByEmailAndPassword(logOutRequest.getEmail(), logOutRequest.getPassword());
+        Optional<User> userOptional = userRepository.findByEmail(logOutRequest.getEmail());
         User user;
         if (userOptional.isPresent()) {
             if(userOptional.get().isLoggedIn() == true) {
@@ -84,7 +79,7 @@ public class UserServiceImpl implements UserService{
     }
 
     public DeleteProfileResponse deleteUser(DeleteUserRequest deleteUserRequest){
-        Optional<User> userOptional = userRepository.findByUserName(deleteUserRequest.getUserName());
+        Optional<User> userOptional = userRepository.findByEmail(deleteUserRequest.getEmail());
         User user;
         if(userOptional.isPresent()){
             if(userOptional.get().isLoggedIn() == true) {
@@ -95,7 +90,7 @@ public class UserServiceImpl implements UserService{
                 return deleteProfileResponse;
             }else{
                 DeleteProfileResponse deleteProfileResponse = new DeleteProfileResponse();
-                deleteProfileResponse.setMessage("you are offline, login to delete");
+                deleteProfileResponse.setMessage("you are offline, login to delete or user already deleted");
                 return deleteProfileResponse;
             }
         }
@@ -129,10 +124,13 @@ public class UserServiceImpl implements UserService{
             throw new EmptySpaceException("Can not take white spaces");
         }
 
-        Optional<User> userOptional = userRepository.findByEmailAndPassword(registerRequest.getEmail(), registerRequest.getPassword());
-        if (userOptional.isPresent()){
-            throw new UserIsPresentException("user already exist");
+        Optional<User> userOptional = userRepository.findByEmail(registerRequest.getEmail());
+        if(userOptional.isPresent()){
+            if(userOptional.get().getUserName().equals(registerRequest.getUserName()) || userOptional.get().getEmail().equals(registerRequest.getEmail()) || userOptional.get().getPassword().equals(registerRequest.getPassword())){
+                throw new UserIsPresentException("user already exist");
+            }
         }
+
     }
 
 
@@ -147,11 +145,11 @@ public class UserServiceImpl implements UserService{
     }
 
     private void userLogOutValidation(LogOutRequest logOutRequest) {
-        if(logOutRequest.getEmail().isEmpty() || logOutRequest.getPassword().isEmpty()){
+        if(logOutRequest.getEmail().isEmpty()){
             throw new UserLoginException("one field is empty");
         }
 
-        if(logOutRequest.getEmail().equals(" ") || logOutRequest.getPassword().equals(" ")){
+        if(logOutRequest.getEmail().equals(" ")){
             throw new EmptySpaceLoginExeption("Can not take white spaces");
         }
     }

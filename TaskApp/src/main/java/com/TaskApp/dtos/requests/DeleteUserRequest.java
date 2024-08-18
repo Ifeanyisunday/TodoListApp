@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class DeleteUserRequest {
-    private String userName;
+    private String email;
 }

@@ -63,7 +63,6 @@ class TodoAppServiceImplTest {
 
         LogOutRequest logOutRequest = new LogOutRequest();
         logOutRequest.setEmail("sunjnr10@gmail");
-        logOutRequest.setPassword("1234");
         userService.logOutUser(logOutRequest);
         assertEquals(false, userRepository.findByEmail(registerRequest.getEmail()).get().isLoggedIn());
     }
@@ -312,7 +311,7 @@ class TodoAppServiceImplTest {
         assertEquals(1, userRepository.count());
 
         DeleteUserRequest deleteUserRequest = new DeleteUserRequest();
-        deleteUserRequest.setUserName("sunday");
+        deleteUserRequest.setEmail("sunjnr10@gmail");
         userService.deleteUser(deleteUserRequest);
         assertEquals(0, userRepository.count());
     }
