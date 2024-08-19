@@ -13,7 +13,7 @@ public class Task {
     private String userId;
     private String title;
     private String note;
-    private int priority;
+    private String priority;
     private boolean isDone;
 
     @Override

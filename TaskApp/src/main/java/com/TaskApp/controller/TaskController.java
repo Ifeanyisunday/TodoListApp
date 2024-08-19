@@ -14,6 +14,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("api/v1/task")
+@CrossOrigin
 public class TaskController {
 
         @Autowired
