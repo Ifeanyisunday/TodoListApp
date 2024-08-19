@@ -10,6 +10,7 @@ import com.TaskApp.dtos.requests.LoginRequest;
 import com.TaskApp.dtos.requests.TaskAddRequest;
 import com.TaskApp.dtos.responses.*;
 import com.TaskApp.exceptions.EmptySpaceLoginExeption;
+import com.TaskApp.exceptions.UserIsPresentException;
 import com.TaskApp.exceptions.UserLoginException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,10 @@ public class TaskServiceImpl implements TaskService {
             Optional<Task> taskOptional = taskRepository.findByTitle(taskAddRequest.getTitle());
             User user = userOptional.get();
             TaskAddResponse taskAddResponse = new TaskAddResponse();
-            if (!taskOptional.isPresent() && userOptional.get().isLoggedIn() == true) {
+            if (taskOptional.isPresent() && userOptional.get().isLoggedIn() == false) {
+                taskAddResponse.setMessage("either you are offline or task already exist");
+                return taskAddResponse;
+            }else {
                 Task task = new Task();
                 task.setUserId(user.getEmail());
                 task.setTitle(taskAddRequest.getTitle());
@@ -41,9 +45,6 @@ public class TaskServiceImpl implements TaskService {
                 task.setPriority(taskAddRequest.getPriority());
                 taskRepository.save(task);
                 taskAddResponse.setMessage("Task added");
-                return taskAddResponse;
-            }else {
-                taskAddResponse.setMessage("either you are offline or task is present");
                 return taskAddResponse;
             }
         }
@@ -151,12 +152,19 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private void addTaskValidation(TaskAddRequest taskAddRequest) {
-        if(taskAddRequest.getEmail().isEmpty() || taskAddRequest.getNote().isEmpty() || taskAddRequest.getTitle().isEmpty()){
+        if (taskAddRequest.getEmail().isEmpty() || taskAddRequest.getNote().isEmpty() || taskAddRequest.getTitle().isEmpty()) {
             throw new UserLoginException("one field is empty");
         }
 
-        if(taskAddRequest.getEmail().equals(" ") || taskAddRequest.getNote().equals(" ") || taskAddRequest.getTitle().equals(" ")){
+        if (taskAddRequest.getEmail().equals(" ") || taskAddRequest.getNote().equals(" ") || taskAddRequest.getTitle().equals(" ")) {
             throw new EmptySpaceLoginExeption("Can not take white spaces");
+        }
+
+        Optional<Task> userOptional = taskRepository.findByTitle(taskAddRequest.getEmail());
+        if (userOptional.isPresent()) {
+            if (userOptional.get().getTitle().equals(taskAddRequest.getTitle())) {
+                throw new UserIsPresentException("user already exist");
+            }
         }
     }
 }
