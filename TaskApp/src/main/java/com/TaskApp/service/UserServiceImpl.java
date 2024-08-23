@@ -44,10 +44,10 @@ public class UserServiceImpl implements UserService{
                 loginResponse.setMessage(name + " you are logged in");
                 return loginResponse;
             }else{
-                LoginResponse loginResponse = new LoginResponse();
+                LoginResponse loginResponse1 = new LoginResponse();
                 String name = user.getUserName();
-                loginResponse.setMessage(name + " you are already logged in");
-                return loginResponse;
+                loginResponse1.setMessage(name + " you are already logged in");
+                return loginResponse1;
             }
         }
         return null;
@@ -124,9 +124,9 @@ public class UserServiceImpl implements UserService{
             throw new EmptySpaceException("Can not take white spaces");
         }
 
-        Optional<User> userOptional = userRepository.findByEmail(registerRequest.getEmail());
-        if(userOptional.isPresent()){
-            if(userOptional.get().getUserName().equals(registerRequest.getUserName()) || userOptional.get().getEmail().equals(registerRequest.getEmail()) || userOptional.get().getPassword().equals(registerRequest.getPassword())){
+//        Optional<User> userOptional = userRepository.findByEmail(registerRequest.getEmail());
+        for(User user : userRepository.findAll()){
+            if(user.getUserName().equals(registerRequest.getUserName()) || user.getEmail().equals(registerRequest.getEmail()) || user.getPassword().equals(registerRequest.getPassword())){
                 throw new UserIsPresentException("user already exist");
             }
         }

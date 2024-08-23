@@ -10,6 +10,7 @@ import com.TaskApp.dtos.requests.LoginRequest;
 import com.TaskApp.dtos.requests.TaskAddRequest;
 import com.TaskApp.dtos.responses.*;
 import com.TaskApp.exceptions.EmptySpaceLoginExeption;
+import com.TaskApp.exceptions.UserDetailsEmpty;
 import com.TaskApp.exceptions.UserIsPresentException;
 import com.TaskApp.exceptions.UserLoginException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,25 +31,25 @@ public class TaskServiceImpl implements TaskService {
     public TaskAddResponse addTask(TaskAddRequest taskAddRequest) {
         addTaskValidation(taskAddRequest);
         Optional<User> userOptional = userRepository.findByEmail(taskAddRequest.getEmail());
-        if (userOptional.isPresent()) {
+        User user = userOptional.get();
+        if (userOptional.isPresent() && userOptional.get().isLoggedIn() == true) {
             Optional<Task> taskOptional = taskRepository.findByTitle(taskAddRequest.getTitle());
-            User user = userOptional.get();
-            TaskAddResponse taskAddResponse = new TaskAddResponse();
-            if (taskOptional.isPresent() && userOptional.get().isLoggedIn() == false) {
-                taskAddResponse.setMessage("either you are offline or task already exist");
-                return taskAddResponse;
-            }else {
+            if (taskOptional.isPresent()) {
+                throw new UserIsPresentException("Task already exist");
+            }else{
                 Task task = new Task();
                 task.setUserId(user.getEmail());
                 task.setTitle(taskAddRequest.getTitle());
                 task.setNote(taskAddRequest.getNote());
                 task.setPriority(taskAddRequest.getPriority());
                 taskRepository.save(task);
-                taskAddResponse.setMessage("Task added");
+                TaskAddResponse taskAddResponse = new TaskAddResponse();
+                taskAddResponse.setMessage("Task has been created");
                 return taskAddResponse;
             }
+        }else{
+            throw new UserDetailsEmpty("User not found");
         }
-        return null;
     }
 
     @Override
@@ -156,15 +157,8 @@ public class TaskServiceImpl implements TaskService {
             throw new UserLoginException("one field is empty");
         }
 
-        if (taskAddRequest.getEmail().equals(" ") || taskAddRequest.getNote().equals(" ") || taskAddRequest.getTitle().equals(" ")) {
+        if (taskAddRequest.getEmail().equals("   ") || taskAddRequest.getNote().equals("    ") || taskAddRequest.getTitle().equals("    ")) {
             throw new EmptySpaceLoginExeption("Can not take white spaces");
-        }
-
-        Optional<Task> userOptional = taskRepository.findByTitle(taskAddRequest.getEmail());
-        if (userOptional.isPresent()) {
-            if (userOptional.get().getTitle().equals(taskAddRequest.getTitle())) {
-                throw new UserIsPresentException("user already exist");
-            }
         }
     }
 }

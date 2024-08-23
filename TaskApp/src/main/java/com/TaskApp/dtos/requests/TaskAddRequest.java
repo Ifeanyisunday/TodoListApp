@@ -6,6 +6,6 @@ import lombok.Data;
 public class TaskAddRequest {
     private String title;
     private String note;
-    private String priority;
+    private int priority;
     private String email;
 }

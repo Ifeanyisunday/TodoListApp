@@ -91,7 +91,7 @@ class TodoAppServiceImplTest {
         TaskAddRequest taskAddRequest1 = new TaskAddRequest();
         taskAddRequest1.setTitle("java");
         taskAddRequest1.setNote("java your father there, your no fit wound me");
-        taskAddRequest1.setPriority("2");
+        taskAddRequest1.setPriority(2);
         taskAddRequest1.setEmail("sunjnr10@gmail");
         taskService.addTask(taskAddRequest1);
         assertEquals(1, taskRepository.count());
@@ -100,7 +100,7 @@ class TodoAppServiceImplTest {
         TaskAddRequest taskAddRequest2 = new TaskAddRequest();
         taskAddRequest2.setTitle("Python");
         taskAddRequest2.setNote("Python your father there, your no fit wound me");
-        taskAddRequest2.setPriority("3");
+        taskAddRequest2.setPriority(3);
         taskAddRequest2.setEmail("sunjnr10@gmail");
         taskService.addTask(taskAddRequest2);
         assertEquals(2, taskRepository.count());
@@ -131,7 +131,7 @@ class TodoAppServiceImplTest {
         TaskAddRequest taskAddRequest1 = new TaskAddRequest();
         taskAddRequest1.setTitle("java");
         taskAddRequest1.setNote("java your father there, your no fit wound me");
-        taskAddRequest1.setPriority("2");
+        taskAddRequest1.setPriority(2);
         taskAddRequest1.setEmail("sunjnr10@gmail");
         taskService.addTask(taskAddRequest1);
         assertEquals(1, taskRepository.count());
@@ -139,7 +139,7 @@ class TodoAppServiceImplTest {
         TaskAddRequest taskAddRequest2 = new TaskAddRequest();
         taskAddRequest2.setTitle("Python");
         taskAddRequest2.setNote("Python your father there, your no fit wound me");
-        taskAddRequest2.setPriority("3");
+        taskAddRequest2.setPriority(3);
         taskAddRequest2.setEmail("sunjnr10@gmail");
         taskService.addTask(taskAddRequest2);
         assertEquals(2, taskRepository.count());
@@ -166,7 +166,7 @@ class TodoAppServiceImplTest {
         TaskAddRequest taskAddRequest1 = new TaskAddRequest();
         taskAddRequest1.setTitle("java");
         taskAddRequest1.setNote("java your father there, your no fit wound me");
-        taskAddRequest1.setPriority("2");
+        taskAddRequest1.setPriority(2);
         taskAddRequest1.setEmail("sunjnr10@gmail");
         taskService.addTask(taskAddRequest1);
         assertEquals(1, taskRepository.count());
@@ -204,7 +204,7 @@ class TodoAppServiceImplTest {
         TaskAddRequest taskAddRequest1 = new TaskAddRequest();
         taskAddRequest1.setTitle("java");
         taskAddRequest1.setNote("java your father there, your no fit wound me");
-        taskAddRequest1.setPriority("2");
+        taskAddRequest1.setPriority(2);
         taskAddRequest1.setEmail("sunjnr10@gmail");
         taskService.addTask(taskAddRequest1);
         assertEquals(1, taskRepository.count());
@@ -212,7 +212,7 @@ class TodoAppServiceImplTest {
         TaskAddRequest taskAddRequest2 = new TaskAddRequest();
         taskAddRequest2.setTitle("Python");
         taskAddRequest2.setNote("Python your father there, your no fit wound me");
-        taskAddRequest2.setPriority("3");
+        taskAddRequest2.setPriority(3);
         taskAddRequest2.setEmail("sunjnr10@gmail");
         taskService.addTask(taskAddRequest2);
         assertEquals(2, taskRepository.count());
@@ -239,7 +239,7 @@ class TodoAppServiceImplTest {
         TaskAddRequest taskAddRequest1 = new TaskAddRequest();
         taskAddRequest1.setTitle("java");
         taskAddRequest1.setNote("java your father there, your no fit wound me");
-        taskAddRequest1.setPriority("2");
+        taskAddRequest1.setPriority(2);
         taskAddRequest1.setEmail("sunjnr10@gmail");
         taskService.addTask(taskAddRequest1);
         assertEquals(1, taskRepository.count());
@@ -247,7 +247,7 @@ class TodoAppServiceImplTest {
         TaskAddRequest taskAddRequest2 = new TaskAddRequest();
         taskAddRequest2.setTitle("Python");
         taskAddRequest2.setNote("Python your father there, your no fit wound me");
-        taskAddRequest2.setPriority("3");
+        taskAddRequest2.setPriority(3);
         taskAddRequest2.setEmail("sunjnr10@gmail");
         taskService.addTask(taskAddRequest2);
         assertEquals(2, taskRepository.count());
@@ -257,7 +257,7 @@ class TodoAppServiceImplTest {
         completeTaskRequest.setTitle("Python");
         TaskAddRequest taskAddRequest = new TaskAddRequest();
         taskAddRequest.setEmail("godp10");
-        taskAddRequest.setPriority("10");
+        taskAddRequest.setPriority(10);
         taskAddRequest.setNote("new lang in town");
         taskAddRequest.setTitle("C++");
         taskService.updateTask(completeTaskRequest, taskAddRequest);
@@ -279,7 +279,7 @@ class TodoAppServiceImplTest {
         TaskAddRequest taskAddRequest1 = new TaskAddRequest();
         taskAddRequest1.setTitle("java");
         taskAddRequest1.setNote("java your father there, your no fit wound me");
-        taskAddRequest1.setPriority("2");
+        taskAddRequest1.setPriority(2);
         taskAddRequest1.setEmail("sunjnr10@gmail");
         taskService.addTask(taskAddRequest1);
         assertEquals(1, taskRepository.count());
@@ -287,7 +287,7 @@ class TodoAppServiceImplTest {
         TaskAddRequest taskAddRequest2 = new TaskAddRequest();
         taskAddRequest2.setTitle("Python");
         taskAddRequest2.setNote("Python your father there, your no fit wound me");
-        taskAddRequest2.setPriority("3");
+        taskAddRequest2.setPriority(3);
         taskAddRequest2.setEmail("sunjnr10@gmail");
         taskService.addTask(taskAddRequest2);
         assertEquals(2, taskRepository.count());
